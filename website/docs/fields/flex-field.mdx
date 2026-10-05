@@ -1,0 +1,59 @@
+---
+sidebar_position: 1
+---
+
+# FlexField
+
+`FlexField` is a JSON field validated against a
+[JSON Schema](https://json-schema.org/). It is the foundation for structured,
+editor-configurable content: the schema is defined in your model, the data is
+validated on save and in forms.
+
+```python
+from blueprint.fields import FlexField
+
+
+class Article(models.Model):
+    content = FlexField(
+        {
+            "type": "object",
+            "properties": {
+                "heading": {"type": "string"},
+                "blocks": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "type": {"enum": ["text", "image"]},
+                            "text": {"type": "string"},
+                        },
+                    },
+                },
+            },
+            "required": ["heading"],
+        }
+    )
+```
+
+## Validation
+
+The schema is checked when the field is instantiated — an invalid schema
+raises `ValueError`. Values are validated with a
+[`JSONSchemaValidator`](/validators-and-managers) attached to the field, so
+both `full_clean()` and form validation reject non-conforming data.
+
+```python
+article = Article(content={"heading": "Hello"})   # valid
+article.full_clean()                              # passes
+
+article.content = {"text": "No heading"}
+article.full_clean()                              # ValidationError
+```
+
+## Migrations
+
+The schema is part of the field's serialized form (`deconstruct()`), so it
+ends up in your migrations. Changing the schema therefore produces a
+migration — intended, because the schema shapes what your application accepts.
+Schema changes are not applied retroactively to existing rows; write a data
+migration when you tighten a schema.

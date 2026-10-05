@@ -1,0 +1,36 @@
+---
+sidebar_position: 4
+---
+
+# Singletons
+
+`SingletonModel` models a settings-style object that logically exists once:
+site-wide settings, a footer configuration, and so on.
+
+```python
+from blueprint.models import SingletonModel
+
+
+class SiteSettings(SingletonModel):
+    site_name = models.CharField(max_length=200)
+    maintenance_mode = models.BooleanField(default=False)
+```
+
+## `SingletonManager`
+
+`objects` is a `SingletonManager` with singleton-aware behavior:
+
+- `get()` ignores its arguments and returns the single instance, or `None`
+  when the table is empty.
+- `create()` creates the instance if it does not exist, otherwise updates it.
+
+```python
+settings = SiteSettings.objects.get()             # None or the instance
+settings = SiteSettings.objects.create(site_name="My site")
+settings = SiteSettings.objects.create(site_name="New name")  # updates
+SiteSettings.objects.count()                       # 1
+```
+
+The single-row guarantee is enforced at the database level with a unique
+constant column, so it also holds under concurrent writes — `save()` on a
+second instance raises `IntegrityError`.

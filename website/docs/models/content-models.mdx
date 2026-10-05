@@ -1,0 +1,65 @@
+---
+sidebar_position: 1
+---
+
+# Content models
+
+The heart of Blueprint is a set of small abstract models. Each contributes
+one behavior, and they compose through normal Python inheritance.
+
+| Base | What it adds |
+|------|--------------|
+| `UUIDModel` | UUID primary key |
+| `TimeStampedModel` | `created_at` / `modified_at` |
+| `EditorModel` | `edited_by` foreign key to your user model |
+| `ManualOrderModel` | `order_key` integer field |
+| `SoftDeletableModel` | `removed_at` and soft deletion |
+| `SingletonModel` | single-row guarantee per model |
+| `ContentModel` | `UUIDModel` + `TimeStampedModel` + `EditorModel` |
+| `SoftDeletableContentModel` | `ContentModel` + `SoftDeletableModel` |
+
+## The composition bases
+
+```python
+from blueprint.models import ContentModel, SoftDeletableContentModel
+
+
+class Article(ContentModel):
+    """UUID pk, timestamps, edited_by."""
+
+
+class Page(SoftDeletableContentModel):
+    """The same, plus soft deletion."""
+```
+
+`TimeStampedModel` orders instances by newest first (`-created_at`) and sets
+`get_latest_by` to `created_at`.
+
+## `EditorModel`
+
+Adds a non-editable `edited_by` foreign key to
+`settings.AUTH_USER_MODEL`, deleted with `SET_NULL`. The related name is
+generated from the app and model names, e.g.
+`user.blueprint_article_edited.all()`.
+
+Blueprint does not populate `edited_by` automatically — set it in your own
+view or service layer when saving user-facing changes:
+
+```python
+article = Article.objects.create(title="Hello", edited_by=request.user)
+```
+
+## Building your own combination
+
+The bases are plain abstract models, so you can compose any combination:
+
+```python
+from blueprint.models import ManualOrderModel, TimeStampedModel, UUIDModel
+
+
+class Section(UUIDModel, TimeStampedModel, ManualOrderModel):
+    """UUID pk, timestamps and manual ordering."""
+```
+
+Related guides: [soft deletion](/models/soft-deletion),
+[manual ordering](/models/manual-ordering), [singletons](/models/singleton).

@@ -1,0 +1,70 @@
+---
+sidebar_position: 1
+---
+
+# Getting started
+
+Blueprint is a regular reusable Django app. Install it, add it to
+`INSTALLED_APPS`, and inherit from its base models.
+
+## Installation
+
+```bash
+pip install django-blueprint
+```
+
+Add the app to your settings:
+
+```python
+# settings.py
+INSTALLED_APPS = [
+    "django.contrib.contenttypes",
+    "django.contrib.auth",
+    # ...
+    "blueprint",
+    # Optionally, for the media library:
+    "blueprint.media_library",
+]
+```
+
+The `blueprint` app itself defines no concrete models, so it needs no
+migrations. `blueprint.media_library` does — run:
+
+```bash
+python manage.py migrate
+```
+
+The media library's models reference your user model through
+`settings.AUTH_USER_MODEL` for the "edited by" audit field, so it works with
+any custom user model.
+
+## Your first content model
+
+```python
+from django.db import models
+
+from blueprint.models import ContentModel
+
+
+class Article(ContentModel):
+    title = models.CharField(max_length=200)
+    body = models.TextField()
+
+    def __str__(self):
+        return self.title
+```
+
+`ContentModel` composes several abstract bases for you: a UUID primary key,
+`created_at`/`modified_at` timestamps, and an `edited_by` foreign key to your
+user model. Add soft deletion by inheriting
+`SoftDeletableContentModel` instead. See [base models](/models/content-models)
+for all the bases and how to mix them.
+
+## Running the test suite
+
+If you want to contribute:
+
+```bash
+poetry install
+poetry run pytest
+```

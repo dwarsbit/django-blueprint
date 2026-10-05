@@ -1,0 +1,59 @@
+---
+sidebar_position: 5
+---
+
+# Validators and managers
+
+The building blocks behind the fields and models, usable on their own.
+
+## JSONSchemaValidator
+
+Validates a value against a JSON Schema. Used internally by
+[`FlexField`](/fields/flex-field).
+
+```python
+from blueprint.validators import JSONSchemaValidator
+
+
+validator = JSONSchemaValidator(json_schema={"type": "integer"})
+validator(42)      # passes
+validator("42")    # raises ValidationError
+```
+
+The validator is `@deconstructible` and implements equality on its schema,
+message and code — safe to use in fields that end up in migrations. The
+default message and code can be overridden:
+
+```python
+validator = JSONSchemaValidator(
+    json_schema={"type": "integer"},
+    message="Enter a whole number.",
+    code="whole_number",
+)
+```
+
+## ChoiceOptionsValidator
+
+Validates that every value in a list is one of the allowed options. Used
+internally by [`MultipleChoiceField`](/fields/other-fields).
+
+```python
+from blueprint.validators import ChoiceOptionsValidator
+
+
+validator = ChoiceOptionsValidator(options=[("a", "Alpha"), ("b", "Beta")])
+validator(["a", "b"])   # passes
+validator(["a", "x"])   # raises ValidationError
+```
+
+## SingletonManager
+
+The manager behind [`SingletonModel`](/models/singleton). `get()` returns
+the first instance or `None`; `create()` creates or updates.
+
+## SoftDeletableManager and SoftDeletableQuerySet
+
+`SoftDeletableManager` filters out instances with a `removed_at` stamp — it
+is what `available_objects` is on every soft-deletable model.
+`SoftDeletableQuerySet` soft-deletes on `delete()`; see
+[soft deletion](/models/soft-deletion).

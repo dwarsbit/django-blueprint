@@ -1,0 +1,63 @@
+---
+sidebar_position: 3
+---
+
+# HTML, choices and tags
+
+## HTMLField
+
+A semantic `TextField` for HTML content. It stores text and does not
+sanitize it — run content through your sanitization pipeline before
+rendering.
+
+```python
+from blueprint.fields import HTMLField
+
+
+class Article(models.Model):
+    body = HTMLField()
+```
+
+## MultipleChoiceField
+
+A JSON array field with a fixed set of allowed values. Options can be passed
+as a mapping or an iterable of pairs; values outside the options are rejected
+by the field's validator.
+
+```python
+from blueprint.fields import MultipleChoiceField
+
+
+class Page(models.Model):
+    sections = MultipleChoiceField(
+        options={"hero": "Hero", "grid": "Grid", "cta": "Call to action"}
+    )
+
+
+page = Page(sections=["hero", "grid"])  # valid
+page = Page(sections=["hero", "oops"])  # ValidationError
+```
+
+Defaults to an empty list and `blank=True`. The options are part of the
+field's serialized form, so changing them produces a migration.
+
+## TagField
+
+A JSON array field for tags. Values are normalized on save: surrounding
+whitespace is trimmed, leading `#` signs are stripped, everything is
+lowercased, and empty and duplicate entries are dropped.
+
+```python
+from blueprint.fields import TagField
+
+
+class Media(models.Model):
+    tags = TagField()
+
+
+media = Media(tags=["News", "#Events", "news ", ""])
+media.save()
+media.tags  # ["news", "events"]
+```
+
+Defaults to an empty list and `blank=True`.

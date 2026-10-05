@@ -1,0 +1,69 @@
+---
+sidebar_position: 4
+---
+
+# Media library
+
+`blueprint.media_library` is a concrete app with two models: `Media` and
+`Folder`. It gives you the storage-and-library side of a CMS without deciding
+what your editor looks like.
+
+## Setup
+
+```python
+INSTALLED_APPS = [
+    # ...
+    "blueprint.media_library",
+]
+```
+
+Then migrate. The app registers with the label `dbp_media_library` and uses
+the `dbp_` table prefix (`dbp_media`, `dbp_folder`).
+
+## Media
+
+`Media` stores an uploaded file and its metadata:
+
+- `file` — a `FileField`; files are stored under a generated UUID
+- `name` — derived from the file name on first save when left empty
+- `alt_text` — description for screen readers
+- `tags` — a [`TagField`](/fields/other-fields)
+- `folder` — optional parent folder
+- `crop` — crop data as a JSON array (see `CropField`)
+- `size` — the exact file size in bytes, filled in on save
+- `type` — one of `image`, `video`, `audio`, `file`
+
+`Media` inherits `ContentModel`, so it also carries `created_at`,
+`modified_at` and `edited_by`.
+
+## Folder
+
+`Folder` is a simple tree: a `name` (unique per parent) and an optional
+self-referencing `parent`.
+
+## Referencing media from your models
+
+```python
+from blueprint.fields import FlexField  # noqa
+from blueprint.media_library.fields import ManyMediaField, MediaField
+from blueprint.models import ContentModel
+
+
+class Article(ContentModel):
+    cover = MediaField(file_type="image")
+    gallery = ManyMediaField(file_type="image")
+
+
+class Download(models.Model):
+    attachments = ManyMediaField(file_type=["audio", "file"])
+```
+
+- `MediaField` — an optional single media item. Nulls out when the media is
+  deleted; the reverse relation is hidden (`related_name="+"`).
+- `ManyMediaField` — any number of media items.
+- Both accept a `file_type` hint (a string or a list) that editors like
+  Content Studio can use to filter the picker. It is metadata for the
+  editing frontend; Blueprint does not enforce it.
+
+`CropField` — the JSON array field used on `Media.crop` — can also be used
+on your own models for crop/focus data.

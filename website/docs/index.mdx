@@ -1,0 +1,41 @@
+---
+sidebar_position: 0
+slug: /
+---
+
+# Django Blueprint
+
+Blueprint is a Django package that provides the models and fields you keep
+rewriting when you add CMS-like functionality to a Django project — without
+buying into a full CMS. It stays a library: no views, no templates, no
+opinions about how your site renders.
+
+## What you get
+
+- **Abstract base models** that compose: UUID primary keys, timestamps, an
+  editor reference, soft deletion, manual ordering and singletons. Mix them
+  into your own models with ordinary inheritance.
+- **Fields with real validation**: a JSON field that validates against a
+  JSON Schema (`FlexField`), a normalized URL path field, tag and
+  multiple-choice fields stored as JSON arrays, and an HTML text field.
+- **A media library app** — `Media` and `Folder` models plus `MediaField`
+  and `ManyMediaField` for referencing media from your own models, with a
+  `file_type` hint for editors.
+
+## What it is not
+
+Blueprint deliberately stops at the data layer. It does not ship views,
+serializers, an admin, or a rendered site. Its intended editing frontend is
+[Django Content Studio](https://github.com/dwarsbit); classic
+`django.contrib.admin` integration is low priority.
+
+## Requirements
+
+- Python 3.12+
+- Django 5.2 or 6.0
+- `jsonschema` (installed automatically)
+
+## Next steps
+
+Start with [installation](/getting-started), then read about the
+[base models](/models/content-models) or the [fields](/fields/flex-field).

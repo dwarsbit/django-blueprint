@@ -1,0 +1,32 @@
+---
+sidebar_position: 2
+---
+
+# URLPathField
+
+`URLPathField` stores a site path like `/docs/intro`. It is unique by
+default, capped at 200 characters, and normalizes values on save:
+
+- a missing leading slash is added: `docs/intro` becomes `/docs/intro`
+- a trailing slash is removed: `/docs/intro/` becomes `/docs/intro`
+
+```python
+from blueprint.fields import URLPathField
+
+
+class Page(models.Model):
+    path = URLPathField()
+```
+
+## Validation
+
+Only letters, numbers, underscores, hyphens and slashes are accepted, and
+consecutive slashes are rejected. These validators are class-level defaults:
+if you pass your own `validators`, they are appended rather than replacing
+the built-in path validation.
+
+```python
+Page(path="docs/intro")        # saved as /docs/intro
+Page(path="docs//intro")       # ValidationError
+Page(path="docs intro")        # ValidationError
+```

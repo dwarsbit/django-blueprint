@@ -1,0 +1,53 @@
+---
+sidebar_position: 2
+---
+
+# Soft deletion
+
+`SoftDeletableModel` adds a `removed_at` timestamp. Deleting an instance
+stamps it instead of removing the row.
+
+```python
+from blueprint.models import SoftDeletableContentModel
+
+
+class Page(SoftDeletableContentModel):
+    title = models.CharField(max_length=200)
+
+
+page = Page.objects.create(title="About")
+page.delete()                      # soft: stamps removed_at
+page.delete(soft=False)           # hard: really deletes the row
+```
+
+## Two managers
+
+Every soft-deletable model gets two managers:
+
+- `objects` — sees everything, including removed instances.
+- `available_objects` — filters out removed instances.
+
+```python
+page.delete()
+Page.objects.filter(pk=page.pk).exists()        # True
+Page.available_objects.filter(pk=page.pk).exists()  # False
+```
+
+The `is_removed` property reflects the current state.
+
+## Bulk deletion
+
+`QuerySet.delete()` soft-deletes as well:
+
+```python
+Page.objects.filter(title__startswith="Draft").delete()
+```
+
+:::caution
+
+Cascade deletes driven by Django's deletion collector still hard-delete
+soft-deletable models — Django bypasses `QuerySet.delete()` on its fast
+delete path. If you rely on soft deletion, avoid cascades from
+non-soft-deletable parents, or override the cascade behavior in your model.
+
+:::

@@ -39,7 +39,6 @@ class SoftDeletableQuerySet(models.QuerySet):
 
 class SoftDeletableManager(models.Manager):
     def get_queryset(self):
-        return (
-            SoftDeletableQuerySet(self.model, using=self._db)
-            .filter(removed_at__isnull=True)
+        return SoftDeletableQuerySet(self.model, using=self._db).filter(
+            removed_at__isnull=True
         )

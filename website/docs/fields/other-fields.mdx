@@ -44,8 +44,8 @@ field's serialized form, so changing them produces a migration.
 ## TagField
 
 A JSON array field for tags. Any string is a valid tag — the field has no
-opinion on their shape. The only thing it does is trim surrounding
-whitespace on save.
+opinion on their shape. On save it trims surrounding whitespace and drops
+tags that end up empty.
 
 ```python
 from blueprint.fields import TagField
@@ -55,7 +55,7 @@ class Article(models.Model):
     tags = TagField()
 
 
-article = Article(tags=["Django", " web dev ", "Django"])
+article = Article(tags=["Django", " web dev ", "Django", "  "])
 article.save()
 article.tags  # ["Django", "web dev", "Django"]
 ```

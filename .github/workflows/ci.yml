@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: test (py${{ matrix.python-version }}, dj${{ matrix.django-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13"]
+        django-version: ["5.2", "6.0"]
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Poetry
+        run: pipx install poetry
+
+      - name: Install dependencies
+        run: poetry install
+
+      # The lock file pins the newest supported Django; override it for
+      # the older legs of the matrix to prove compatibility.
+      - name: Pin Django ${{ matrix.django-version }}
+        run: poetry run pip install "Django~=${{ matrix.django-version }}.0"
+
+      - name: Run tests
+        run: poetry run pytest
+
+  lint:
+    name: black
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry
+        run: pipx install poetry
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Check formatting
+        run: poetry run black --check .

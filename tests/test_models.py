@@ -145,25 +145,43 @@ def test_queryset_delete_is_soft():
 
 
 class TestTranslations:
-    def test_verbose_names_are_translated(self):
-        from django.utils import translation
+    APP_NAMES = {
+        "de": "Mediathek",
+        "en": "Media Library",
+        "es": "Biblioteca multimedia",
+        "fr": "Médiathèque",
+        "it": "Libreria multimediale",
+        "nl": "Mediabibliotheek",
+    }
 
-        with translation.override("nl"):
-            assert str(Article._meta.get_field("edited_by").verbose_name) == (
-                "Bewerkt door"
-            )
-            assert str(Page._meta.get_field("removed_at").verbose_name) == (
-                "Verwijderd op"
-            )
+    EDITED_BY = {
+        "de": "Bearbeitet von",
+        "en": "Edited by",
+        "es": "Editado por",
+        "fr": "Modifié par",
+        "it": "Modificato da",
+        "nl": "Bewerkt door",
+    }
 
-    def test_media_library_app_name_is_translated(self):
+    def test_app_name_is_translated(self):
         from django.apps import apps
         from django.utils import translation
 
-        with translation.override("nl"):
-            assert str(apps.get_app_config("dbp_media_library").verbose_name) == (
-                "Mediabibliotheek"
-            )
+        for language, expected in self.APP_NAMES.items():
+            with translation.override(language):
+                assert (
+                    str(apps.get_app_config("dbp_media_library").verbose_name)
+                    == expected
+                )
+
+    def test_verbose_names_are_translated(self):
+        from django.utils import translation
+
+        for language, expected in self.EDITED_BY.items():
+            with translation.override(language):
+                assert str(Article._meta.get_field("edited_by").verbose_name) == (
+                    expected
+                )
 
     def test_media_model_fields_are_translated(self):
         from django.utils import translation

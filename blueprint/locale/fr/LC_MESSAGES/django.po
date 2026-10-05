@@ -7,71 +7,70 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 08:29-0500\n"
+"POT-Creation-Date: 2026-10-05 08:35-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: nl\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 #: fields.py:89
 msgid "Only accepts letters, numbers, underscores, hyphens and slashes."
-msgstr "Accepteert alleen letters, cijfers, liggende streepjes, streepjes en schuine streepjes."
+msgstr "Accepte uniquement des lettres, des chiffres, des traits de soulignement, des tirets et des barres obliques."
 
 #: fields.py:95
 msgid "Consecutive slashes are not allowed."
-msgstr "Opeenvolgende schuine streepjes zijn niet toegestaan."
+msgstr "Les barres obliques consécutives ne sont pas autorisées."
 
 #: media_library/apps.py:8
 msgid "Media Library"
-msgstr "Mediabibliotheek"
+msgstr "Médiathèque"
 
 #: media_library/models.py:19 media_library/models.py:20
 msgid "Media"
-msgstr "Media"
+msgstr "Média"
 
 #: media_library/models.py:22 media_library/models.py:58
 msgid "File"
-msgstr "Bestand"
+msgstr "Fichier"
 
 #: media_library/models.py:25 media_library/models.py:95
 msgid "Name"
-msgstr "Naam"
+msgstr "Nom"
 
 #: media_library/models.py:32
 msgid "Alt text"
-msgstr "Alt-tekst"
+msgstr "Texte alternatif"
 
 #: media_library/models.py:33
 msgid "Describes a picture for screen readers"
-msgstr "Beschrijft een afbeelding voor schermlezers"
+msgstr "Décrit une image pour les lecteurs d'écran"
 
 #: media_library/models.py:36
 msgid "Tags"
-msgstr "Tags"
+msgstr "Étiquettes"
 
 #: media_library/models.py:44 media_library/models.py:90
 msgid "Folder"
-msgstr "Map"
+msgstr "Dossier"
 
 #: media_library/models.py:47
 msgid "Crop"
-msgstr "Uitsnede"
+msgstr "Recadrage"
 
 #: media_library/models.py:50
 msgid "File size"
-msgstr "Bestandsgrootte"
+msgstr "Taille du fichier"
 
 #: media_library/models.py:55
 msgid "Image"
-msgstr "Afbeelding"
+msgstr "Image"
 
 #: media_library/models.py:56
 msgid "Video"
-msgstr "Video"
+msgstr "Vidéo"
 
 #: media_library/models.py:57
 msgid "Audio"
@@ -79,31 +78,31 @@ msgstr "Audio"
 
 #: media_library/models.py:61
 msgid "File type"
-msgstr "Bestandstype"
+msgstr "Type de fichier"
 
 #: media_library/models.py:91
 msgid "Folders"
-msgstr "Mappen"
+msgstr "Dossiers"
 
 #: models.py:29
 msgid "Created at"
-msgstr "Aangemaakt op"
+msgstr "Créé le"
 
 #: models.py:31
 msgid "Modified at"
-msgstr "Bewerkt op"
+msgstr "Modifié le"
 
 #: models.py:44
 msgid "Edited by"
-msgstr "Bewerkt door"
+msgstr "Modifié par"
 
 #: models.py:54
 msgid "Order key"
-msgstr "Volgorde"
+msgstr "Ordre"
 
 #: models.py:74
 msgid "Removed at"
-msgstr "Verwijderd op"
+msgstr "Supprimé le"
 
 #: models.py:114
 msgid "Singleton"
@@ -111,8 +110,8 @@ msgstr "Singleton"
 
 #: validators.py:10
 msgid "Enter a valid value."
-msgstr "Voer een geldige waarde in."
+msgstr "Saisissez une valeur valide."
 
 #: validators.py:42
 msgid "One or more values are not valid choices."
-msgstr "Een of meer waarden zijn geen geldige keuzes."
+msgstr "Une ou plusieurs valeurs ne sont pas des choix valides."

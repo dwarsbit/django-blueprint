@@ -11,6 +11,7 @@ Release-candidate fixes found in the pre-1.0.0 review.
 - 🧹 `TagField` and `HashTagField` pass non-list JSON values through unchanged instead of iterating them
 - 🧹 `HTMLField` only sanitizes string values
 - 🧹 The `URLPathField` validator messages and the media library app's verbose name are now translatable; the `nl` catalog ships their translations
+- 🎁 New translations: German, French, Spanish and Italian catalogs for all user-facing strings; the `nl` catalog gaps are filled
 
 ## v1.0.0-rc.1
 

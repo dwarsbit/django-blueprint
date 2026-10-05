@@ -206,14 +206,37 @@ class TestURLPathField:
 
         field = URLPathField()
 
-        with translation.override("nl"):
-            messages = [str(v.message) for v in field.validators]
+        expected = {
+            "de": (
+                "Akzeptiert nur Buchstaben, Zahlen, Unterstriche, "
+                "Bindestriche und Schrägstriche."
+            ),
+            "en": "Only accepts letters, numbers, underscores, hyphens and slashes.",
+            "es": "Solo acepta letras, números, guiones bajos, guiones y barras.",
+            "fr": (
+                "Accepte uniquement des lettres, des chiffres, des traits de "
+                "soulignement, des tirets et des barres obliques."
+            ),
+            "it": "Accetta solo lettere, numeri, underscore, trattini e barre.",
+            "nl": (
+                "Accepteert alleen letters, cijfers, liggende streepjes, "
+                "streepjes en schuine streepjes."
+            ),
+        }
 
-        assert messages[0] == (
-            "Accepteert alleen letters, cijfers, liggende streepjes, "
-            "streepjes en schuine streepjes."
-        )
-        assert messages[1] == "Opeenvolgende schuine streepjes zijn niet toegestaan."
+        for language, message in expected.items():
+            with translation.override(language):
+                assert str(field.validators[0].message) == message
+
+    def test_consecutive_slashes_message_is_translated(self):
+        from django.utils import translation
+
+        field = URLPathField()
+
+        with translation.override("de"):
+            assert str(field.validators[1].message) == (
+                "Aufeinanderfolgende Schrägstriche sind nicht erlaubt."
+            )
 
     def test_root_path_is_kept(self):
         link = Link.objects.create(path="/")

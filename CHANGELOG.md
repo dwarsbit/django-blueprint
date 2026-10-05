@@ -1,8 +1,9 @@
 # Changelog
 
-## Unreleased
+## v1.0.0-rc.2
 
-Release-candidate fixes found in the pre-1.0.0 review.
+Review fixes ahead of 1.0.0. Items marked ⚠️ are breaking for pre-1.0 users
+and may require running `makemigrations` in downstream projects.
 
 - 👾 Packages now ship the compiled `nl` translation catalog: the `.mo` file was excluded from builds by a `.gitignore` rule and pip installs silently had no translations
 - 🎁 `FlexField` and `MultipleChoiceField` keep their built-in validation when caller-supplied `validators` are passed — custom validators are appended instead of silently replacing the schema/options validation

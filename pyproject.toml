@@ -1,6 +1,6 @@
 [project]
 name = "django-blueprint"
-version = "1.0.0-rc.1"
+version = "1.0.0-rc.2"
 description = "Common models and fields for adding CMS-like functionality to Django."
 authors = [
     {name = "Leon van der Grient",email = "leon@dwarsbit.nl"}

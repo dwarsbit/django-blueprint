@@ -2,11 +2,53 @@ import jsonschema
 from django.core.validators import RegexValidator
 from django.db import models
 
+from django.utils.module_loading import import_string
+
+from .sanitizers import get_default_sanitizer
 from .validators import ChoiceOptionsValidator, JSONSchemaValidator
 
 
 class HTMLField(models.TextField):
-    description = "A field for HTML content."
+    description = "A field for HTML content, sanitized on save."
+
+    def __init__(self, *args, sanitizer=None, **kwargs):
+        """
+        `sanitizer` is a callable (str -> str) or a dotted import path to
+        one, and replaces the default sanitizer for this field. Use a
+        module-level function so migrations can serialize it. `None`
+        resolves lazily: the BLUEPRINT["HTML_SANITIZER"] setting first,
+        then the built-in allowlist sanitizer.
+        """
+        self.sanitizer = sanitizer
+
+        super().__init__(*args, **kwargs)
+
+    def get_sanitizer(self):
+        if callable(self.sanitizer):
+            return self.sanitizer
+
+        if isinstance(self.sanitizer, str):
+            return import_string(self.sanitizer)
+
+        return get_default_sanitizer()
+
+    def pre_save(self, model_instance, add):
+        value = super().pre_save(model_instance, add)
+
+        if value:
+            value = self.get_sanitizer()(value)
+
+            setattr(model_instance, self.attname, value)
+
+        return value
+
+    def deconstruct(self):
+        name, path, args, kwargs = super().deconstruct()
+
+        if self.sanitizer is not None:
+            kwargs["sanitizer"] = self.sanitizer
+
+        return name, path, args, kwargs
 
 
 class FlexField(models.JSONField):

@@ -8,7 +8,7 @@ tables with run_syncdb, just like it does for any migration-less app.
 
 from django.db import models
 
-from blueprint.fields import HashTagField, TagField, URLPathField
+from blueprint.fields import HashTagField, HTMLField, TagField, URLPathField
 from blueprint.media_library.fields import ManyMediaField, MediaField
 from blueprint.models import (
     ContentModel,
@@ -48,6 +48,14 @@ class HashTagged(ContentModel):
         db_table = "test_hash_tagged"
 
     tags = HashTagField()
+
+
+class Post(ContentModel):
+    class Meta(ContentModel.Meta):
+        app_label = "blueprint"
+        db_table = "test_post"
+
+    body = HTMLField()
 
 
 class Gallery(ContentModel):

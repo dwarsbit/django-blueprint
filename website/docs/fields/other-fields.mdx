@@ -6,9 +6,9 @@ sidebar_position: 3
 
 ## HTMLField
 
-A semantic `TextField` for HTML content. It stores text and does not
-sanitize it — run content through your sanitization pipeline before
-rendering.
+A text field for HTML content. Content is **sanitized on save**, so every
+value stored through the field is clean — no matter how the instance gets
+saved.
 
 ```python
 from blueprint.fields import HTMLField
@@ -16,6 +16,59 @@ from blueprint.fields import HTMLField
 
 class Article(models.Model):
     body = HTMLField()
+
+
+article = Article(body="<p>Hi</p><script>alert(1)</script>")
+article.save()
+article.body  # "<p>Hi</p>"
+```
+
+### The default sanitizer
+
+The built-in sanitizer (`blueprint.sanitizers.sanitize_html`, powered by
+[nh3](https://nh3.readthedocs.io/)) keeps a CMS-friendly allowlist of tags
+(headings, text, lists, links, images, tables, audio/video) and safe
+attributes (`class`, `href`, `src`, `alt`, `title`, sizes, and a few more),
+allows only the `http`, `https`, `mailto` and `tel` URL schemes, adds
+`rel="noopener noreferrer"` to links, and strips comments and everything
+else — including the content of `script` and `style` tags.
+
+### Customizing the sanitizer
+
+Two levels of customization, both resolved lazily:
+
+**Project-wide** — set `BLUEPRINT["HTML_SANITIZER"]` in your Django settings
+to a callable or a dotted import path:
+
+```python
+# settings.py
+BLUEPRINT = {
+    "HTML_SANITIZER": "myapp.text.sanitize",
+}
+```
+
+**Per field** — pass `sanitizer` to an individual field; it wins over the
+project-wide setting. Use a module-level function (not a lambda), because
+the sanitizer is serialized into your migrations:
+
+```python
+from blueprint.fields import HTMLField
+
+
+class Article(models.Model):
+    # myapp.text.sanitize_upper is a module-level function
+    body = HTMLField(sanitizer="myapp.text.sanitize_upper")
+```
+
+To opt out of sanitizing entirely — for example when you sanitize on input
+through your editor — point the sanitizer at a passthrough function:
+
+```python
+def passthrough(value):
+    return value
+
+
+BLUEPRINT = {"HTML_SANITIZER": passthrough}
 ```
 
 ## MultipleChoiceField

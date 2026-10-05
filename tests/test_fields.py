@@ -1,3 +1,5 @@
+import types
+
 import pytest
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
@@ -12,7 +14,8 @@ from blueprint.fields import (
     URLPathField,
 )
 
-from .models import HashTagged, Link, Tagged
+from .models import HashTagged, Link, Post, Tagged
+from .sanitizers import passthrough_sanitizer
 
 pytestmark = pytest.mark.django_db
 
@@ -21,7 +24,84 @@ class TestHTMLField:
     def test_is_a_text_field(self):
         field = HTMLField()
         assert isinstance(field, models.TextField)
-        assert field.description == "A field for HTML content."
+
+    def test_script_tags_and_content_are_removed(self):
+        post = Post.objects.create(body="<p>Hi</p><script>alert(1)</script>")
+        post.refresh_from_db()
+        assert post.body == "<p>Hi</p>"
+
+    def test_event_handlers_are_removed(self):
+        post = Post.objects.create(body='<p onclick="x()">Hi</p>')
+        post.refresh_from_db()
+        assert post.body == "<p>Hi</p>"
+
+    def test_javascript_urls_are_removed(self):
+        post = Post.objects.create(body='<a href="javascript:alert(1)">x</a>')
+        post.refresh_from_db()
+        assert "javascript" not in post.body
+        assert "<a" in post.body
+
+    def test_safe_content_is_kept(self):
+        html = (
+            '<h2 class="title">Head</h2>'
+            "<p>Some <em>text</em> with a "
+            '<a href="https://example.com" title="Docs">link</a>.</p>'
+        )
+        post = Post.objects.create(body=html)
+        post.refresh_from_db()
+        assert '<h2 class="title">Head</h2>' in post.body
+        assert "<em>text</em>" in post.body
+        assert '<a href="https://example.com" title="Docs"' in post.body
+
+    def test_comments_are_stripped(self):
+        post = Post.objects.create(body="<p>Hi</p><!-- secret -->")
+        post.refresh_from_db()
+        assert post.body == "<p>Hi</p>"
+
+    def test_empty_value_is_left_alone(self):
+        post = Post.objects.create(body="")
+        assert post.body == ""
+
+    def test_field_sanitizer_overrides_the_default(self):
+        field = HTMLField(sanitizer=passthrough_sanitizer)
+        field.set_attributes_from_name("body")
+
+        instance = types.SimpleNamespace(body='<p onclick="x()">Hi</p>')
+        assert field.pre_save(instance, True) == '<p onclick="x()">Hi</p>'
+
+    def test_field_sanitizer_accepts_a_dotted_path(self):
+        field = HTMLField(sanitizer="tests.sanitizers.passthrough_sanitizer")
+        field.set_attributes_from_name("body")
+
+        instance = types.SimpleNamespace(body='<p onclick="x()">Hi</p>')
+        assert field.pre_save(instance, True) == '<p onclick="x()">Hi</p>'
+
+    def test_settings_sanitizer_is_used(self, settings):
+        settings.BLUEPRINT = {"HTML_SANITIZER": "tests.sanitizers.upper_sanitizer"}
+
+        field = HTMLField()
+        field.set_attributes_from_name("body")
+
+        instance = types.SimpleNamespace(body="<p>hi</p>")
+        assert field.pre_save(instance, True) == "<P>HI</P>"
+
+    def test_settings_sanitizer_can_be_a_callable(self, settings):
+        settings.BLUEPRINT = {"HTML_SANITIZER": passthrough_sanitizer}
+
+        field = HTMLField()
+        field.set_attributes_from_name("body")
+
+        instance = types.SimpleNamespace(body="<p onclick='x()'>Hi</p>")
+        assert field.pre_save(instance, True) == "<p onclick='x()'>Hi</p>"
+
+    def test_deconstruct_omits_the_default_sanitizer(self):
+        _, _, _, kwargs = HTMLField().deconstruct()
+        assert "sanitizer" not in kwargs
+
+    def test_deconstruct_includes_a_custom_sanitizer(self):
+        field = HTMLField(sanitizer=passthrough_sanitizer)
+        _, _, _, kwargs = field.deconstruct()
+        assert kwargs["sanitizer"] is passthrough_sanitizer
 
 
 class TestFlexField:

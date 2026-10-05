@@ -73,6 +73,7 @@ CI (`.github/workflows/ci.yml`) runs the suite on GitHub Actions for every push 
 - New JSON-backed fields: subclass `models.JSONField`, use `kwargs.setdefault(...)` for defaults so callers can override, `default=list` for array-shaped fields, and implement `deconstruct()` when adding constructor parameters (see `FlexField`) so migrations can serialize the field.
 - Custom validators: mark them `@deconstructible` and implement `__eq__` so migration state hashing stays stable.
 - Editor/audit fields go through the abstract bases (`EditorModel.edited_by` references `settings.AUTH_USER_MODEL`) — never hardcode a user model.
+- Package-level settings live under the `BLUEPRINT` dict in the Django settings (e.g. `HTML_SANITIZER`), always resolved lazily so test overrides work.
 - Soft deletion: `SoftDeletableModel.delete()` defaults to soft; `objects` sees everything, `available_objects` filters removed items. Preserve this two-manager pattern.
 
 ## Public API care

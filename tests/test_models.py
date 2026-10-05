@@ -115,7 +115,6 @@ class TestSingletonModel:
         assert settings.site_name == "Second"
 
 
-@pytest.mark.xfail(reason="Phase 0: reorder() accesses the manager via the instance")
 @pytest.mark.django_db
 def test_reorder_normalizes_order_keys():
     Section.objects.create(name="One", order_key=7)

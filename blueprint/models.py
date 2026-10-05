@@ -50,7 +50,7 @@ class ManualOrderModel(models.Model):
     order_key = models.IntegerField(default=0, verbose_name=_("Order key"))
 
     def reorder(self):
-        qs = self.objects.all().order_by("order_key")
+        qs = type(self)._default_manager.all().order_by("order_key")
         idx = 1
         for obj in qs:
             obj.order_key = idx

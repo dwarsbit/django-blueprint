@@ -142,3 +142,37 @@ def test_queryset_delete_is_soft():
     Page.objects.all().delete()
     assert Page.objects.filter(pk=page.pk).exists()
     assert Page.available_objects.count() == 0
+
+
+class TestTranslations:
+    def test_verbose_names_are_translated(self):
+        from django.utils import translation
+
+        with translation.override("nl"):
+            assert str(Article._meta.get_field("edited_by").verbose_name) == (
+                "Bewerkt door"
+            )
+            assert str(Page._meta.get_field("removed_at").verbose_name) == (
+                "Verwijderd op"
+            )
+
+    def test_media_library_app_name_is_translated(self):
+        from django.apps import apps
+        from django.utils import translation
+
+        with translation.override("nl"):
+            assert str(apps.get_app_config("dbp_media_library").verbose_name) == (
+                "Mediabibliotheek"
+            )
+
+    def test_media_model_fields_are_translated(self):
+        from django.utils import translation
+
+        from blueprint.media_library.models import Media
+
+        with translation.override("nl"):
+            assert str(Media._meta.get_field("alt_text").verbose_name) == "Alt-tekst"
+            assert str(Media._meta.get_field("folder").verbose_name) == "Map"
+            assert str(Media._meta.get_field("size").verbose_name) == (
+                "Bestandsgrootte"
+            )

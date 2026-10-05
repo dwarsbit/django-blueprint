@@ -201,6 +201,20 @@ class TestURLPathField:
         with pytest.raises(ValidationError):
             link.full_clean()
 
+    def test_validator_messages_are_translated(self):
+        from django.utils import translation
+
+        field = URLPathField()
+
+        with translation.override("nl"):
+            messages = [str(v.message) for v in field.validators]
+
+        assert messages[0] == (
+            "Accepteert alleen letters, cijfers, liggende streepjes, "
+            "streepjes en schuine streepjes."
+        )
+        assert messages[1] == "Opeenvolgende schuine streepjes zijn niet toegestaan."
+
     def test_root_path_is_kept(self):
         link = Link.objects.create(path="/")
         assert link.path == "/"

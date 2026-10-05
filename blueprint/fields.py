@@ -2,6 +2,7 @@ import jsonschema
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.module_loading import import_string
+from django.utils.translation import gettext_lazy as _
 
 from .sanitizers import get_default_sanitizer
 from .validators import ChoiceOptionsValidator, JSONSchemaValidator
@@ -84,12 +85,14 @@ class URLPathField(models.CharField):
     default_validators = [
         RegexValidator(
             "^[a-zA-Z0-9_/-]+$",
-            message="Only accepts letters, numbers, underscores, hyphens and slashes.",
+            message=_(
+                "Only accepts letters, numbers, underscores, hyphens and slashes."
+            ),
         ),
         RegexValidator(
             "//",
             inverse_match=True,
-            message="Consecutive slashes are not allowed.",
+            message=_("Consecutive slashes are not allowed."),
         ),
     ]
 

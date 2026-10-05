@@ -10,6 +10,7 @@ Release-candidate fixes found in the pre-1.0.0 review.
 - 👾 `Media.__str__` no longer crashes for instances without a file; it falls back to the name or primary key
 - 🧹 `TagField` and `HashTagField` pass non-list JSON values through unchanged instead of iterating them
 - 🧹 `HTMLField` only sanitizes string values
+- 🧹 The `URLPathField` validator messages and the media library app's verbose name are now translatable; the `nl` catalog ships their translations
 
 ## v1.0.0-rc.1
 

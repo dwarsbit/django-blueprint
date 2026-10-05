@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 04:48-0500\n"
+"POT-Creation-Date: 2026-10-05 08:29-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,6 +18,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: fields.py:89
+msgid "Only accepts letters, numbers, underscores, hyphens and slashes."
+msgstr "Accepteert alleen letters, cijfers, liggende streepjes, streepjes en schuine streepjes."
+
+#: fields.py:95
+msgid "Consecutive slashes are not allowed."
+msgstr "Opeenvolgende schuine streepjes zijn niet toegestaan."
+
+#: media_library/apps.py:8
+msgid "Media Library"
+msgstr "Mediabibliotheek"
+
 #: media_library/models.py:19 media_library/models.py:20
 msgid "Media"
 msgstr ""
@@ -26,7 +38,7 @@ msgstr ""
 msgid "File"
 msgstr "Bestand"
 
-#: media_library/models.py:25 media_library/models.py:92
+#: media_library/models.py:25 media_library/models.py:95
 msgid "Name"
 msgstr "Naam"
 
@@ -42,7 +54,7 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: media_library/models.py:44 media_library/models.py:87
+#: media_library/models.py:44 media_library/models.py:90
 msgid "Folder"
 msgstr "Map"
 
@@ -70,7 +82,7 @@ msgstr "Audio"
 msgid "File type"
 msgstr "Bestandstype"
 
-#: media_library/models.py:88
+#: media_library/models.py:91
 msgid "Folders"
 msgstr "Mappen"
 
@@ -100,4 +112,8 @@ msgstr ""
 
 #: validators.py:10
 msgid "Enter a valid value."
+msgstr ""
+
+#: validators.py:42
+msgid "One or more values are not valid choices."
 msgstr ""

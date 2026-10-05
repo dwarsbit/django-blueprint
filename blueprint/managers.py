@@ -8,17 +8,20 @@ class SingletonManager(models.Manager):
         """
         return super().first()
 
-    def create(self, *args, **kwargs):
+    def create(self, **kwargs):
         """
-        Creates an object if it doesn't already exist.
-        Otherwise updates the existing object.
+        Creates the singleton if it doesn't already exist.
+        Otherwise updates the existing instance.
         """
         singleton = self.get()
 
         if not singleton:
-            return super().create(*args, **kwargs)
+            return super().create(**kwargs)
 
-        singleton.save(*args, **kwargs)
+        for name, value in kwargs.items():
+            setattr(singleton, name, value)
+
+        singleton.save()
 
         return singleton
 

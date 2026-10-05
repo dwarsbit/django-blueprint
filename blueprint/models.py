@@ -99,6 +99,11 @@ class SingletonModel(UUIDModel):
 
     objects = SingletonManager()
 
+    # Enforces a single row per concrete model at the database level.
+    singleton = models.BooleanField(
+        default=True, editable=False, unique=True, verbose_name=_("Singleton")
+    )
+
     @property
     def is_singleton(self):
         return True

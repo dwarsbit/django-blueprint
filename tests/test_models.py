@@ -104,15 +104,18 @@ class TestSingletonModel:
         SiteSettings.objects.create(site_name="My site")
         assert SiteSettings.objects.count() == 1
 
-    @pytest.mark.xfail(
-        reason="Phase 0: SingletonManager.create forwards field kwargs to save()",
-        strict=True,
-    )
     def test_create_updates_existing_instance(self):
         SiteSettings.objects.create(site_name="First")
         settings = SiteSettings.objects.create(site_name="Second")
         assert SiteSettings.objects.count() == 1
         assert settings.site_name == "Second"
+
+    def test_database_allows_only_one_row(self):
+        from django.db import IntegrityError
+
+        SiteSettings.objects.create(site_name="First")
+        with pytest.raises(IntegrityError):
+            SiteSettings(site_name="Second").save()
 
 
 @pytest.mark.django_db

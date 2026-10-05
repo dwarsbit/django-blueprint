@@ -59,6 +59,7 @@ There is no test suite yet. The plan is pytest with pytest-django (to be added).
 
 - Formatting: black, default settings (line length 88). Run `poetry run black .` before committing.
 - Commit messages: Conventional Commits (`feat:`, `fix:`, `chore:`, ...), as used in the history.
+- Classic Django admin integration is low priority: Blueprint's intended editing frontend is Django Content Studio (separate project). Do not add `django.contrib.admin`-specific code without being asked.
 - New abstract models: `abstract = True` in `Meta`, design for composition (see how `ContentModel` combines `UUIDModel`, `TimeStampedModel`, `EditorModel`).
 - New JSON-backed fields: subclass `models.JSONField`, use `kwargs.setdefault(...)` for defaults so callers can override, `default=list` for array-shaped fields, and implement `deconstruct()` when adding constructor parameters (see `FlexField`) so migrations can serialize the field.
 - Custom validators: mark them `@deconstructible` and implement `__eq__` so migration state hashing stays stable.

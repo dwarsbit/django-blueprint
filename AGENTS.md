@@ -62,6 +62,8 @@ Conventions:
 - Known-but-unfixed bugs are documented with `@pytest.mark.xfail` tests (each references its roadmap item in `ROADMAP.md`, kept local). When fixing one, flip the test to expect success.
 - Test models use explicit `db_table` values prefixed `test_` to avoid collisions.
 
+CI (`.github/workflows/ci.yml`) runs the suite on GitHub Actions for every push and pull request: Python 3.12/3.13 × Django 5.2/6.0, plus a `black --check` job. Keep new code passing on all matrix legs.
+
 ## Code conventions
 
 - Formatting: black, default settings (line length 88). Run `poetry run black .` before committing.

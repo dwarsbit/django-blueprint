@@ -51,6 +51,10 @@ We welcome contributions! Here's how to get started:
 5. Push to the branch (`git push origin feature/amazing-feature`)
 6. Open a Pull Request
 
+## 📚 Documentation
+
+For detailed documentation, visit [dwarsbit.github.io/django-blueprint](https://dwarsbit.github.io/django-blueprint/)
+
 ## 🐛 Issues & Support
 
 - 🐛 **Bug Reports**: [GitHub Issues](https://github.com/dwarsbit/django-blueprint/issues)
@@ -69,6 +73,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🔗 Links
 
 - [PyPI Package](https://pypi.org/project/django-blueprint/)
+- [Documentation](https://dwarsbit.github.io/django-blueprint/)
 - [GitHub Repository](https://github.com/dwarsbit/django-blueprint)
 - [Changelog](CHANGELOG.md)
 

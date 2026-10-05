@@ -83,6 +83,16 @@ This is a published library (PyPI). Anything exported from `blueprint.models`, `
 - Changing a base model or a field's serialized form (e.g. its `deconstruct()` output) forces new migrations on every downstream project — treat such changes as high-impact.
 - Keep `CHANGELOG.md` updated for user-visible changes (it is currently a stub; turn it into a proper Keep-a-Changelog-style file when the next release is cut).
 
+## Documentation website
+
+The Docusaurus site in `website/` deploys to GitHub Pages at https://dwarsbit.github.io/django-blueprint/ via `.github/workflows/website.yml` on pushes to `main` that touch `website/**`. Verify changes with `npm run build` and `npm run typecheck` inside `website/` before committing.
+
+Site conventions:
+
+- Docs-only mode: `routeBasePath: "/"` — there is no separate landing page; `website/docs/index.mdx` is the home page.
+- The sidebar autogenerates from the folder structure; control ordering with `sidebar_position` front matter and `_category_.json` files.
+- Content must match the shipped API — when changing public behavior in `blueprint/`, update the affected docs pages in the same commit.
+
 ## Versioning and releases
 
 The version string exists in two places and must be kept in sync:

@@ -99,11 +99,19 @@ class TestMultipleChoiceField:
         field = MultipleChoiceField(options=[("a", "Alpha"), ("b", "Beta")])
         assert field.options == [("a", "Alpha"), ("b", "Beta")]
 
-    @pytest.mark.xfail(reason="Phase 0: values are not validated against options")
+    def test_deconstruct_includes_options(self):
+        field = MultipleChoiceField(options=[("a", "Alpha")])
+        _, _, _, kwargs = field.deconstruct()
+        assert kwargs["options"] == [("a", "Alpha")]
+
     def test_values_outside_options_are_rejected(self):
         field = MultipleChoiceField(options=[("a", "Alpha"), ("b", "Beta")])
         with pytest.raises(ValidationError):
             field.clean(["a", "c"], None)
+
+    def test_values_within_options_pass(self):
+        field = MultipleChoiceField(options=[("a", "Alpha"), ("b", "Beta")])
+        field.clean(["a", "b"], None)
 
 
 class TestTagField:

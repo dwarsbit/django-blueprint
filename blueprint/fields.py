@@ -2,7 +2,7 @@ import jsonschema
 from django.core.validators import RegexValidator
 from django.db import models
 
-from .validators import JSONSchemaValidator
+from .validators import ChoiceOptionsValidator, JSONSchemaValidator
 
 
 class HTMLField(models.TextField):
@@ -84,9 +84,18 @@ class MultipleChoiceField(models.JSONField):
         if not options:
             options = []
 
-        self.options = list(options.items()) if isinstance(options, dict) else options
+        self.options = (
+            list(options.items()) if isinstance(options, dict) else list(options)
+        )
+
+        kwargs.setdefault("validators", [ChoiceOptionsValidator(options=self.options)])
 
         super().__init__(*args, **kwargs)
+
+    def deconstruct(self):
+        name, path, args, kwargs = super().deconstruct()
+        kwargs["options"] = self.options
+        return name, path, args, kwargs
 
 
 class TagField(models.JSONField):

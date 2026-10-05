@@ -2,7 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/django-blueprint.svg)](https://badge.fury.io/py/django-blueprint)
 [![Python versions](https://img.shields.io/pypi/pyversions/django-blueprint.svg)](https://pypi.org/project/django-blueprint/)
-[![Django versions](https://img.shields.io/badge/django-5.0%2B-blue.svg)](https://www.djangoproject.com/)
+[![Django versions](https://img.shields.io/badge/django-5.2%2B-blue.svg)](https://www.djangoproject.com/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 Common models and fields for adding CMS-like functionality to your Django application.
@@ -11,7 +11,7 @@ Common models and fields for adding CMS-like functionality to your Django applic
 
 ### Installation
 
-☝️ Django Headless depends on Django.
+☝️ Django Blueprint depends on Django.
 
 ```bash
 pip install django-blueprint
@@ -29,6 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blueprint',  # Add this
+    # Optionally, for the media library:
+    # 'blueprint.media_library',
     # ... your apps
 ]
 ```
@@ -36,7 +38,7 @@ INSTALLED_APPS = [
 ## 🛠️ Requirements
 
 - Python 3.12+
-- Django 5.0+
+- Django 5.2+
 
 ## 🤝 Contributing
 
@@ -48,10 +50,6 @@ We welcome contributions! Here's how to get started:
 4. Commit your changes (`git commit -m 'Add amazing feature'`)
 5. Push to the branch (`git push origin feature/amazing-feature`)
 6. Open a Pull Request
-
-## 📚 Documentation
-
-For detailed documentation, visit [djangoheadless.org](https://djangoheadless.org)
 
 ## 🐛 Issues & Support
 
@@ -71,7 +69,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🔗 Links
 
 - [PyPI Package](https://pypi.org/project/django-blueprint/)
-- [Documentation](https://djangoheadless.org)
 - [GitHub Repository](https://github.com/dwarsbit/django-blueprint)
 - [Changelog](CHANGELOG.md)
 

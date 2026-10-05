@@ -1,5 +1,6 @@
 import pytest
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 from django.db import models
 
 from blueprint.fields import (
@@ -61,6 +62,22 @@ class TestURLPathField:
         field = URLPathField()
         assert field.unique is True
         assert field.max_length == 200
+
+    def test_default_validators_are_always_present(self):
+        field = URLPathField(validators=[])
+        regex_validators = [
+            v for v in field.validators if isinstance(v, RegexValidator)
+        ]
+        assert len(regex_validators) == 2
+
+    def test_custom_validators_are_appended(self):
+        extra = RegexValidator("^/custom", message="Must start with /custom.")
+        field = URLPathField(validators=[extra])
+        assert extra in field.validators
+        regex_validators = [
+            v for v in field.validators if isinstance(v, RegexValidator)
+        ]
+        assert len(regex_validators) == 3
 
     def test_value_without_slashes_is_normalized_on_save(self):
         link = Link.objects.create(path="foo/bar")

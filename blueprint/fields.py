@@ -37,23 +37,21 @@ class FlexField(models.JSONField):
 class URLPathField(models.CharField):
     description = "A field for a unique URL path. Only accepts letters, numbers, underscores, hyphens and slashes."
 
+    default_validators = [
+        RegexValidator(
+            "^[a-zA-Z0-9_/-]+$",
+            message="Only accepts letters, numbers, underscores, hyphens and slashes.",
+        ),
+        RegexValidator(
+            "//",
+            inverse_match=True,
+            message="Consecutive slashes are not allowed.",
+        ),
+    ]
+
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("unique", True)
         kwargs.setdefault("max_length", 200)
-        kwargs.setdefault(
-            "validators",
-            [
-                RegexValidator(
-                    "^[a-zA-Z0-9_/-]+$",
-                    message="Only accepts letters, numbers, underscores, hyphens and slashes.",
-                ),
-                RegexValidator(
-                    "//",
-                    inverse_match=True,
-                    message="Consecutive slashes are not allowed.",
-                ),
-            ],
-        )
 
         super().__init__(*args, **kwargs)
 

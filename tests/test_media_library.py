@@ -76,6 +76,10 @@ class TestMedia:
         media = make_media(type="image")
         assert media.type == "image"
 
+    def test_full_clean_passes_on_defaults(self):
+        media = make_media()
+        media.full_clean()
+
     def test_save_without_file(self):
         media = Media(name="No file")
         media.save()

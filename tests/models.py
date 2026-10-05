@@ -8,7 +8,7 @@ tables with run_syncdb, just like it does for any migration-less app.
 
 from django.db import models
 
-from blueprint.fields import URLPathField
+from blueprint.fields import TagField, URLPathField
 from blueprint.models import (
     ContentModel,
     ManualOrderModel,
@@ -31,6 +31,14 @@ class Link(ContentModel):
         db_table = "test_link"
 
     path = URLPathField()
+
+
+class Tagged(ContentModel):
+    class Meta(ContentModel.Meta):
+        app_label = "blueprint"
+        db_table = "test_tagged"
+
+    tags = TagField()
 
 
 class Section(ManualOrderModel):

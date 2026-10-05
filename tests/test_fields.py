@@ -10,7 +10,7 @@ from blueprint.fields import (
     URLPathField,
 )
 
-from .models import Link
+from .models import Link, Tagged
 
 pytestmark = pytest.mark.django_db
 
@@ -118,9 +118,14 @@ class TestTagField:
     def test_defaults_to_an_empty_list(self):
         field = TagField()
         assert field.default is list
+        assert field.blank is True
 
-    @pytest.mark.xfail(reason="Phase 0: tags are not normalized or deduplicated")
     def test_tags_are_normalized_and_deduplicated(self):
-        field = TagField()
-        cleaned = field.clean(["Hello", "hello ", "Hello", "World"], None)
-        assert cleaned == ["hello", "world"]
+        tagged = Tagged.objects.create(tags=["Hello", "hello ", "Hello", "World"])
+        tagged.refresh_from_db()
+        assert tagged.tags == ["hello", "world"]
+
+    def test_leading_hash_and_whitespace_are_stripped(self):
+        tagged = Tagged.objects.create(tags=["#News", "  Events  ", "", "#"])
+        tagged.refresh_from_db()
+        assert tagged.tags == ["news", "events"]

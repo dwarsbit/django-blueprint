@@ -103,5 +103,25 @@ class TagField(models.JSONField):
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("default", list)
+        kwargs.setdefault("blank", True)
 
         super().__init__(*args, **kwargs)
+
+    def pre_save(self, model_instance, add):
+        """
+        Normalizes tags: trims surrounding whitespace, strips leading hash
+        signs, lowercases, drops empties and removes duplicates.
+        """
+        value = super().pre_save(model_instance, add)
+
+        if value is None:
+            return value
+
+        normalized = []
+        for tag in value:
+            tag = str(tag).strip().lstrip("#").strip().lower()
+            if tag and tag not in normalized:
+                normalized.append(tag)
+
+        setattr(model_instance, self.attname, normalized)
+        return normalized

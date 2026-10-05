@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 class SingletonManager(models.Manager):
@@ -26,6 +27,19 @@ class SingletonManager(models.Manager):
         return singleton
 
 
+class SoftDeletableQuerySet(models.QuerySet):
+    def delete(self):
+        """
+        Soft-deletes every instance in the queryset: stamps removed_at
+        instead of removing rows.
+        """
+        count = self.update(removed_at=timezone.now())
+        return count, {self.model._meta.label: count}
+
+
 class SoftDeletableManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(removed_at__isnull=True)
+        return (
+            SoftDeletableQuerySet(self.model, using=self._db)
+            .filter(removed_at__isnull=True)
+        )

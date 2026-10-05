@@ -6,7 +6,11 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from .managers import SingletonManager, SoftDeletableManager
+from .managers import (
+    SingletonManager,
+    SoftDeletableManager,
+    SoftDeletableQuerySet,
+)
 
 
 class UUIDModel(models.Model):
@@ -62,7 +66,7 @@ class SoftDeletableModel(models.Model):
     class Meta:
         abstract = True
 
-    objects = models.Manager()
+    objects = SoftDeletableQuerySet.as_manager()
 
     available_objects = SoftDeletableManager()
 
@@ -74,13 +78,19 @@ class SoftDeletableModel(models.Model):
     def is_removed(self):
         return self.removed_at is not None
 
-    def delete(self, using: Any = None, *args: Any, soft: bool = True, **kwargs: Any):
+    def delete(
+        self, using: Any = None, keep_parents: bool = False, soft: bool = True
+    ) -> tuple[int, dict[str, int]]:
+        """
+        Soft-deletes by default: stamps removed_at instead of removing the row.
+        Pass soft=False to delete for real.
+        """
         if soft:
             self.removed_at = timezone.now()
             self.save(using=using)
-            return None
-        else:
-            return super().delete(*args, **kwargs)
+            return 1, {self.__class__._meta.label: 1}
+
+        return super().delete(using=using, keep_parents=keep_parents)
 
 
 class ContentModel(UUIDModel, TimeStampedModel, EditorModel):

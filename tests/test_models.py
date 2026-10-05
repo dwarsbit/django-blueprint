@@ -136,9 +136,9 @@ def test_reorder_normalizes_order_keys():
     ]
 
 
-@pytest.mark.xfail(reason="Phase 0: queryset deletes bypass soft deletion")
 @pytest.mark.django_db
 def test_queryset_delete_is_soft():
     page = Page.objects.create(title="Hello")
     Page.objects.all().delete()
     assert Page.objects.filter(pk=page.pk).exists()
+    assert Page.available_objects.count() == 0

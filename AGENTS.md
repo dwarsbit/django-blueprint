@@ -81,7 +81,7 @@ This is a published library (PyPI). Anything exported from `blueprint.models`, `
 
 - Avoid breaking changes to base models and fields; downstream projects inherit from them and generate their own migrations. Renames/removals need a major version and a CHANGELOG entry.
 - Changing a base model or a field's serialized form (e.g. its `deconstruct()` output) forces new migrations on every downstream project — treat such changes as high-impact.
-- Keep `CHANGELOG.md` updated for user-visible changes (it is currently a stub; turn it into a proper Keep-a-Changelog-style file when the next release is cut).
+- `CHANGELOG.md` follows the house style shared with django-headless: per-version bullet lists with emoji prefixes (🎁 feature, 👾 bugfix, 🧩 model/manager behavior, 📚 docs, 🧪 tests, ⚠️ breaking). Record every user-visible change in the `Unreleased` section.
 
 ## Documentation website
 

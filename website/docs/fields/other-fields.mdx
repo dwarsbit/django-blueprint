@@ -43,21 +43,42 @@ field's serialized form, so changing them produces a migration.
 
 ## TagField
 
-A JSON array field for tags. Values are normalized on save: surrounding
-whitespace is trimmed, leading `#` signs are stripped, everything is
-lowercased, and empty and duplicate entries are dropped.
+A JSON array field for tags. Any string is a valid tag — the field has no
+opinion on their shape. The only thing it does is trim surrounding
+whitespace on save.
 
 ```python
 from blueprint.fields import TagField
 
 
-class Media(models.Model):
+class Article(models.Model):
     tags = TagField()
 
 
-media = Media(tags=["News", "#Events", "news ", ""])
-media.save()
-media.tags  # ["news", "events"]
+article = Article(tags=["Django", " web dev ", "Django"])
+article.save()
+article.tags  # ["Django", "web dev", "Django"]
+```
+
+Defaults to an empty list and `blank=True`.
+
+## HashTagField
+
+A JSON array field for hashtags, built on `TagField`. Values are normalized
+to hashtag form on save: lowercased, all whitespace and `#` signs removed,
+duplicates dropped and empty results discarded.
+
+```python
+from blueprint.fields import HashTagField
+
+
+class Article(models.Model):
+    hashtags = HashTagField()
+
+
+article = Article(hashtags=["#DjangoCon", "  New York ", "djangocon"])
+article.save()
+article.hashtags  # ["djangocon", "newyork"]
 ```
 
 Defaults to an empty list and `blank=True`.

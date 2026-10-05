@@ -107,8 +107,30 @@ class TagField(models.JSONField):
 
     def pre_save(self, model_instance, add):
         """
-        Normalizes tags: trims surrounding whitespace, strips leading hash
-        signs, lowercases, drops empties and removes duplicates.
+        Trims surrounding whitespace from every tag. Tags are otherwise
+        kept exactly as given: any string is valid.
+        """
+        value = super().pre_save(model_instance, add)
+
+        if value is None:
+            return value
+
+        trimmed = [str(tag).strip() for tag in value]
+
+        setattr(model_instance, self.attname, trimmed)
+        return trimmed
+
+
+class HashTagField(TagField):
+    description = (
+        "A field for storing hashtags as a JSON array. "
+        "Values are normalized to lowercase, without spaces or hash signs."
+    )
+
+    def pre_save(self, model_instance, add):
+        """
+        Normalizes every tag to a hashtag form: lowercase, without any
+        whitespace or hash signs, and without duplicates.
         """
         value = super().pre_save(model_instance, add)
 
@@ -117,7 +139,8 @@ class TagField(models.JSONField):
 
         normalized = []
         for tag in value:
-            tag = str(tag).strip().lstrip("#").strip().lower()
+            tag = "".join(tag.split()).replace("#", "").lower()
+
             if tag and tag not in normalized:
                 normalized.append(tag)
 

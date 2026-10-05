@@ -6,12 +6,13 @@ from django.db import models
 from blueprint.fields import (
     FlexField,
     HTMLField,
+    HashTagField,
     MultipleChoiceField,
     TagField,
     URLPathField,
 )
 
-from .models import Link, Tagged
+from .models import HashTagged, Link, Tagged
 
 pytestmark = pytest.mark.django_db
 
@@ -137,12 +138,36 @@ class TestTagField:
         assert field.default is list
         assert field.blank is True
 
-    def test_tags_are_normalized_and_deduplicated(self):
-        tagged = Tagged.objects.create(tags=["Hello", "hello ", "Hello", "World"])
+    def test_surrounding_whitespace_is_trimmed(self):
+        tagged = Tagged.objects.create(tags=["  Hello  ", "World\t"])
         tagged.refresh_from_db()
-        assert tagged.tags == ["hello", "world"]
+        assert tagged.tags == ["Hello", "World"]
 
-    def test_leading_hash_and_whitespace_are_stripped(self):
-        tagged = Tagged.objects.create(tags=["#News", "  Events  ", "", "#"])
+    def test_values_are_kept_as_given(self):
+        tagged = Tagged.objects.create(tags=["Hello", "hello", "Hello", "#News", ""])
         tagged.refresh_from_db()
-        assert tagged.tags == ["news", "events"]
+        assert tagged.tags == ["Hello", "hello", "Hello", "#News", ""]
+
+
+class TestHashTagField:
+    def test_defaults_to_an_empty_list(self):
+        field = HashTagField()
+        assert field.default is list
+        assert field.blank is True
+
+    def test_values_are_normalized(self):
+        tagged = HashTagged.objects.create(
+            tags=["#News", "  New York ", "news", "#Events"]
+        )
+        tagged.refresh_from_db()
+        assert tagged.tags == ["news", "newyork", "events"]
+
+    def test_duplicates_collapse(self):
+        tagged = HashTagged.objects.create(tags=["#News", "news", " NEWS "])
+        tagged.refresh_from_db()
+        assert tagged.tags == ["news"]
+
+    def test_whitespace_and_hash_only_values_are_dropped(self):
+        tagged = HashTagged.objects.create(tags=["#", "   ", "#  #"])
+        tagged.refresh_from_db()
+        assert tagged.tags == []

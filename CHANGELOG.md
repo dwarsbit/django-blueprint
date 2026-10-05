@@ -10,7 +10,8 @@ pre-1.0 users and may require running `makemigrations` in downstream projects.
 - 🎁 `MultipleChoiceField` validates values against its `options` via the new `ChoiceOptionsValidator`
 - 🎁 `MediaField`/`ManyMediaField` default `to` to the `Media` model, so `MediaField(file_type="image")` works without a keyword-only `to`
 - ⚠️ `Media.size` stores the exact size in bytes (`PositiveBigIntegerField`) instead of rounded kilobytes — schema change, run `makemigrations`
-- ⚠️ `TagField` normalizes values on save (trims whitespace, strips leading `#`, lowercases, drops empties and duplicates) and defaults `blank=True`
+- 🎁 New `HashTagField` for hashtags: values are normalized on save to lowercase, without any whitespace or `#` signs, deduplicated
+- ⚠️ `TagField` is opinion-free: it only trims surrounding whitespace and no longer lowercases, strips `#`, drops empties or deduplicates
 - ⚠️ `SoftDeletableModel.delete()` matches Django's signature and returns a `(count, {model: count})` tuple for soft deletes instead of `None`
 - ⚠️ `MultipleChoiceField` now serializes its `options`, and `URLPathField` keeps its built-in path validators when custom ones are passed — both change the fields' `deconstruct()` output, generating a field alteration in downstream projects
 - 👾 Fixes `ManualOrderModel.reorder()` crashing: it accessed the manager through the instance

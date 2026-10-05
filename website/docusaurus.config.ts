@@ -1,80 +1,64 @@
-import { themes as prismThemes } from "prism-react-renderer";
 import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
 
 const config: Config = {
   title: "Django Blueprint",
-  tagline: "CMS building blocks for Django",
+  tagline: "Common models and fields for CMS-like functionality in Django",
+  favicon: "img/favicon.svg",
   url: "https://dwarsbit.github.io",
   baseUrl: "/django-blueprint/",
   organizationName: "dwarsbit",
   projectName: "django-blueprint",
-  favicon: "img/logo.svg",
-
-  onBrokenAnchors: "warn",
-
+  onBrokenLinks: "throw",
   markdown: {
     hooks: {
       onBrokenMarkdownLinks: "warn",
     },
   },
-
-  presets: [
-    [
-      "classic",
-      {
-        docs: {
-          routeBasePath: "/",
-          sidebarPath: "./sidebars.ts",
-          editUrl:
-            "https://github.com/dwarsbit/django-blueprint/edit/main/website",
-        },
-        blog: false,
-        theme: {
-          customCss: "./src/css/custom.css",
-        },
-      } satisfies Preset.Options,
-    ],
-  ],
-
+  trailingSlash: false,
+  themes: [],
   themeConfig: {
     colorMode: {
       defaultMode: "light",
-      disableSwitch: false,
       respectPrefersColorScheme: true,
     },
     navbar: {
       title: "Django Blueprint",
       logo: {
-        alt: "Django Blueprint logo",
+        alt: "Django Blueprint",
         src: "img/logo.svg",
       },
       items: [
-        { label: "Getting started", to: "/getting-started", position: "left" },
-        { label: "Models", to: "/models/content-models", position: "left" },
-        { label: "Fields", to: "/fields/flex-field", position: "left" },
         {
-          label: "Media library",
-          to: "/media-library",
+          label: "Docs",
           position: "left",
+          to: "docs/intro",
         },
         {
           href: "https://github.com/dwarsbit/django-blueprint",
           label: "GitHub",
           position: "right",
         },
+        {
+          href: "https://pypi.org/project/django-blueprint/",
+          label: "PyPI",
+          position: "right",
+        },
       ],
     },
     footer: {
       style: "dark",
+      copyright: `Copyright © ${new Date().getFullYear()} Leon van der Grient. Built with Django and Docusaurus.`,
       links: [
         {
           title: "Docs",
           items: [
-            { label: "Getting started", to: "/getting-started" },
-            { label: "Models", to: "/models/content-models" },
-            { label: "Fields", to: "/fields/flex-field" },
-            { label: "Media library", to: "/media-library" },
+            { label: "Introduction", to: "/docs/intro" },
+            { label: "Getting started", to: "/docs/getting-started" },
+            {
+              label: "Media library",
+              to: "/docs/media-library",
+            },
           ],
         },
         {
@@ -95,13 +79,27 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Django Blueprint contributors. Built with Docusaurus.`,
     },
     prism: {
-      theme: prismThemes.github,
-      darkTheme: prismThemes.vsDark,
+      additionalLanguages: ["bash", "json", "python", "yaml"],
     },
   } satisfies Preset.ThemeConfig,
+  presets: [
+    [
+      "classic",
+      {
+        docs: {
+          sidebarPath: "./sidebars.ts",
+          editUrl: "https://github.com/dwarsbit/django-blueprint/edit/main/website/",
+          showLastUpdateTime: true,
+        },
+        blog: false,
+        theme: {
+          customCss: "./src/css/custom.css",
+        },
+      } satisfies Preset.Options,
+    ],
+  ],
 };
 
 export default config;

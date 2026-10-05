@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-02 09:20+0100\n"
+"POT-Creation-Date: 2026-10-05 04:48-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,160 +17,87 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-#: content_framework/auth/api_token/models.py:19
-#: content_framework/auth/api_token/models.py:92
-msgid "Token"
-msgstr ""
 
-#: content_framework/auth/api_token/models.py:23
-msgid "Description"
-msgstr ""
-
-#: content_framework/auth/api_token/models.py:27
-msgid "Last used"
-msgstr ""
-
-#: content_framework/auth/api_token/models.py:30
-msgid "Read-only"
-msgstr ""
-
-#: content_framework/auth/api_token/models.py:32
-msgid "Full access"
-msgstr ""
-
-#: content_framework/auth/api_token/models.py:35
-msgid "Permissions"
-msgstr ""
-
-#: content_framework/auth/api_token/models.py:38
-msgid "Enabled"
-msgstr ""
-
-#: content_framework/auth/api_token/models.py:75
-#: content_framework/auth/api_token/models.py:76
-msgid "API Token Usage"
-msgstr ""
-
-#: content_framework/auth/api_token/models.py:79
-msgid "Timestamp"
-msgstr ""
-
-#: content_framework/auth/api_token/models.py:81
-msgid "Method"
-msgstr ""
-
-#: content_framework/auth/api_token/models.py:83
-msgid "Path"
-msgstr ""
-
-#: content_framework/auth/api_token/models.py:86
-msgid "Query parameters"
-msgstr ""
-
-#: content_framework/media_library/models.py:30
-#: content_framework/media_library/models.py:31
+#: media_library/models.py:19 media_library/models.py:20
 msgid "Media"
 msgstr ""
 
-#: content_framework/media_library/models.py:33
-#: content_framework/media_library/models.py:68
+#: media_library/models.py:22 media_library/models.py:58
 msgid "File"
 msgstr "Bestand"
 
-#: content_framework/media_library/models.py:36
-#: content_framework/media_library/models.py:101
+#: media_library/models.py:25 media_library/models.py:92
 msgid "Name"
 msgstr "Naam"
 
-#: content_framework/media_library/models.py:43
+#: media_library/models.py:32
 msgid "Alt text"
 msgstr "Alt-tekst"
 
-#: content_framework/media_library/models.py:44
+#: media_library/models.py:33
 msgid "Describes a picture for screen readers"
 msgstr ""
 
-#: content_framework/media_library/models.py:47
+#: media_library/models.py:36
 msgid "Tags"
 msgstr ""
 
-#: content_framework/media_library/models.py:54
-#: content_framework/media_library/models.py:96
+#: media_library/models.py:44 media_library/models.py:87
 msgid "Folder"
 msgstr "Map"
 
-#: content_framework/media_library/models.py:57
+#: media_library/models.py:47
 msgid "Crop"
 msgstr "Uitsnede"
 
-#: content_framework/media_library/models.py:60
+#: media_library/models.py:50
 msgid "File size"
 msgstr "Bestandsgrootte"
 
-#: content_framework/media_library/models.py:65
+#: media_library/models.py:55
 msgid "Image"
 msgstr "Afbeelding"
 
-#: content_framework/media_library/models.py:66
+#: media_library/models.py:56
 msgid "Video"
 msgstr "Video"
 
-#: content_framework/media_library/models.py:67
+#: media_library/models.py:57
 msgid "Audio"
 msgstr "Audio"
 
-#: content_framework/media_library/models.py:71
+#: media_library/models.py:61
 msgid "File type"
 msgstr "Bestandstype"
 
-#: content_framework/media_library/models.py:97
+#: media_library/models.py:88
 msgid "Folders"
 msgstr "Mappen"
 
-#: content_framework/models.py:28
+#: models.py:29
 msgid "Created at"
 msgstr "Aangemaakt op"
 
-#: content_framework/models.py:30
+#: models.py:31
 msgid "Modified at"
 msgstr "Bewerkt op"
 
-#: content_framework/models.py:43
+#: models.py:44
 msgid "Edited by"
 msgstr "Bewerkt door"
 
-#: content_framework/models.py:53
+#: models.py:54
 msgid "Order key"
 msgstr "Volgorde"
 
-#: content_framework/models.py:73
+#: models.py:74
 msgid "Removed at"
 msgstr "Verwijderd op"
 
-#: content_framework/user/models.py:21
-msgid "User"
+#: models.py:114
+msgid "Singleton"
 msgstr ""
 
-#: content_framework/user/models.py:22
-msgid "Users"
-msgstr ""
-
-#: content_framework/user/models.py:27
-msgid "Email"
-msgstr ""
-
-#: content_framework/user/models.py:33
-msgid "Profile picture"
-msgstr ""
-
-#: content_framework/user/models.py:40
-msgid "Locale"
-msgstr ""
-
-#: content_framework/user/models.py:47
-msgid "Timezone"
-msgstr ""
-
-#: content_framework/validators.py:10
+#: validators.py:10
 msgid "Enter a valid value."
 msgstr ""

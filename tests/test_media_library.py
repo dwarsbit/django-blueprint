@@ -61,11 +61,9 @@ class TestMedia:
         media = make_media(name="Custom name")
         assert media.name == "Custom name"
 
-    def test_size_is_stored_in_kilobytes(self):
+    def test_size_is_stored_in_bytes(self):
         media = make_media(content=b"x" * 2500)
-        # round(2500 / 1000) == 2, not 3: Python rounds halves to even.
-        # Documents current behavior; Phase 0 switches to bytes.
-        assert media.size == 2
+        assert media.size == 2500
 
     def test_defaults(self):
         media = make_media()
@@ -78,7 +76,6 @@ class TestMedia:
         media = make_media(type="image")
         assert media.type == "image"
 
-    @pytest.mark.xfail(reason="Phase 0: save() reads file.size without a file guard")
     def test_save_without_file(self):
         media = Media(name="No file")
         media.save()

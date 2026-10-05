@@ -29,7 +29,7 @@ class Media(ContentModel):
         blank=True,
         default="",
         max_length=255,
-        verbose_name=_("Alt tekst"),
+        verbose_name=_("Alt text"),
         help_text=_("Describes a picture for screen readers"),
     )
 
@@ -38,6 +38,7 @@ class Media(ContentModel):
     folder = models.ForeignKey(
         "Folder",
         null=True,
+        blank=True,
         on_delete=models.CASCADE,
         related_name="media",
         verbose_name=_("Folder"),
@@ -45,7 +46,7 @@ class Media(ContentModel):
 
     crop = CropField(verbose_name=_("Crop"))
 
-    size = models.PositiveIntegerField(
+    size = models.PositiveBigIntegerField(
         null=True, verbose_name=_("File size"), editable=False
     )
 
@@ -65,16 +66,17 @@ class Media(ContentModel):
         return self.file.url
 
     def save(self, *args, **kwargs):
-        if not self.name:
-            file_name = self.file.name.split("/")[-1]
-            # If file name has an extension
-            if "." in file_name:
-                # Remove extension
-                self.name = ".".join(file_name.split(".")[:-1])
-            else:
-                self.name = file_name
+        if self.file:
+            if not self.name:
+                file_name = self.file.name.split("/")[-1]
+                # If file name has an extension
+                if "." in file_name:
+                    # Remove extension
+                    self.name = ".".join(file_name.split(".")[:-1])
+                else:
+                    self.name = file_name
 
-        self.size = round(self.file.size / 1000)
+            self.size = self.file.size
 
         return super().save(*args, **kwargs)
 

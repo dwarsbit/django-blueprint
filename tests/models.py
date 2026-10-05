@@ -9,6 +9,7 @@ tables with run_syncdb, just like it does for any migration-less app.
 from django.db import models
 
 from blueprint.fields import TagField, URLPathField
+from blueprint.media_library.fields import ManyMediaField, MediaField
 from blueprint.models import (
     ContentModel,
     ManualOrderModel,
@@ -39,6 +40,16 @@ class Tagged(ContentModel):
         db_table = "test_tagged"
 
     tags = TagField()
+
+
+class Gallery(ContentModel):
+    class Meta(ContentModel.Meta):
+        app_label = "blueprint"
+        db_table = "test_gallery"
+
+    cover = MediaField()
+
+    photos = ManyMediaField()
 
 
 class Section(ManualOrderModel):

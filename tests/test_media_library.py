@@ -9,6 +9,8 @@ from blueprint.media_library.fields import (
 )
 from blueprint.media_library.models import Folder, Media
 
+from .models import Gallery
+
 pytestmark = pytest.mark.django_db
 
 
@@ -89,30 +91,43 @@ class TestMedia:
 
 class TestMediaFields:
     def test_media_field_defaults(self):
-        field = MediaField(to=Media)
+        field = MediaField()
         assert isinstance(field, models.ForeignKey)
         assert field.blank is True
         assert field.null is True
         assert field.remote_field.related_name == "+"
         assert field.remote_field.on_delete is models.SET_NULL
 
+    def test_media_field_target_defaults_to_media_model(self):
+        assert Gallery._meta.get_field("cover").related_model is Media
+
     def test_media_field_file_type(self):
-        assert MediaField(to=Media).file_type is None
-        assert MediaField(to=Media, file_type="image").file_type == "image"
-        assert MediaField(to=Media, file_type=["image", "video"]).file_type == [
+        assert MediaField().file_type is None
+        assert MediaField(file_type="image").file_type == "image"
+        assert MediaField(file_type=["image", "video"]).file_type == [
             "image",
             "video",
         ]
 
     def test_many_media_field_defaults(self):
-        field = ManyMediaField(to=Media)
+        field = ManyMediaField()
         assert isinstance(field, models.ManyToManyField)
         assert field.blank is True
         assert field.remote_field.related_name == "+"
         assert field.file_type is None
 
+    def test_many_media_field_target_defaults_to_media_model(self):
+        assert Gallery._meta.get_field("photos").related_model is Media
+
     def test_many_media_field_file_type(self):
-        assert ManyMediaField(to=Media, file_type="video").file_type == "video"
+        assert ManyMediaField(file_type="video").file_type == "video"
+
+    def test_media_relations_work(self):
+        media = make_media()
+        gallery = Gallery.objects.create(cover=media)
+        gallery.photos.add(media)
+        assert gallery.cover == media
+        assert list(gallery.photos.all()) == [media]
 
     def test_crop_field_defaults(self):
         field = CropField()

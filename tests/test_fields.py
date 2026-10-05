@@ -144,9 +144,14 @@ class TestTagField:
         assert tagged.tags == ["Hello", "World"]
 
     def test_values_are_kept_as_given(self):
-        tagged = Tagged.objects.create(tags=["Hello", "hello", "Hello", "#News"])
+        tagged = Tagged.objects.create(tags=["Hello", "hello", "#News"])
         tagged.refresh_from_db()
-        assert tagged.tags == ["Hello", "hello", "Hello", "#News"]
+        assert tagged.tags == ["Hello", "hello", "#News"]
+
+    def test_duplicates_are_dropped(self):
+        tagged = Tagged.objects.create(tags=["Hello", "Hello ", "hello"])
+        tagged.refresh_from_db()
+        assert tagged.tags == ["Hello", "hello"]
 
     def test_empty_tags_are_dropped(self):
         tagged = Tagged.objects.create(tags=["", "   ", "World"])

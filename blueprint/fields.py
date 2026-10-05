@@ -107,16 +107,21 @@ class TagField(models.JSONField):
 
     def pre_save(self, model_instance, add):
         """
-        Trims surrounding whitespace from every tag and drops tags that end
-        up empty. Tags are otherwise kept exactly as given: any string is
-        valid.
+        Trims surrounding whitespace from every tag and drops duplicates
+        and tags that end up empty. Tags are otherwise kept exactly as
+        given: any string is valid.
         """
         value = super().pre_save(model_instance, add)
 
         if value is None:
             return value
 
-        trimmed = [str(tag).strip() for tag in value if str(tag).strip()]
+        trimmed = []
+        for tag in value:
+            tag = str(tag).strip()
+
+            if tag and tag not in trimmed:
+                trimmed.append(tag)
 
         setattr(model_instance, self.attname, trimmed)
         return trimmed

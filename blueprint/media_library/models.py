@@ -63,7 +63,10 @@ class Media(ContentModel):
     )
 
     def __str__(self):
-        return self.file.url
+        if self.file:
+            return self.file.url
+
+        return self.name or str(self.pk)
 
     def save(self, *args, **kwargs):
         if self.file:

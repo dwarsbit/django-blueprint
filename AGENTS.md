@@ -27,7 +27,7 @@ blueprint/
     └── migrations/    # Concrete migrations, keep committed
 ```
 
-- Translations live in `blueprint/locale/` (nl). All user-facing strings must use `gettext_lazy` (`_()`).
+- Translations live in `blueprint/locale/` (nl). All user-facing strings must use `gettext_lazy` (`_()`). The compiled `.mo` catalogs are **committed** — they must ship in the wheel — so after changing a `.po` file, run `cd blueprint && django-admin compilemessages -l nl` and commit the `.mo` together with the `.po`.
 - Database tables use the `dbp_` prefix (`db_table = "dbp_media"`, `"dbp_folder"`); keep this convention for new concrete models.
 
 ## Commands

@@ -62,6 +62,13 @@ class TestHTMLField:
         post = Post.objects.create(body="")
         assert post.body == ""
 
+    def test_non_string_values_are_passed_through(self):
+        field = HTMLField(sanitizer=passthrough_sanitizer)
+        field.set_attributes_from_name("body")
+
+        instance = types.SimpleNamespace(body=42)
+        assert field.pre_save(instance, True) == 42
+
     def test_field_sanitizer_overrides_the_default(self):
         field = HTMLField(sanitizer=passthrough_sanitizer)
         field.set_attributes_from_name("body")
@@ -137,6 +144,18 @@ class TestFlexField:
         with pytest.raises(ValidationError):
             field.validators[0]({})
 
+    def test_custom_validators_are_appended_to_the_schema_validator(self):
+        def no_foo(value):
+            if value and "foo" in value:
+                raise ValidationError("no foo")
+
+        field = FlexField({"type": "object"}, validators=[no_foo])
+
+        from blueprint.validators import JSONSchemaValidator
+
+        assert isinstance(field.validators[0], JSONSchemaValidator)
+        assert field.validators[1] is no_foo
+
 
 class TestURLPathField:
     def test_defaults(self):
@@ -182,6 +201,17 @@ class TestURLPathField:
         with pytest.raises(ValidationError):
             link.full_clean()
 
+    def test_root_path_is_kept(self):
+        link = Link.objects.create(path="/")
+        assert link.path == "/"
+
+    def test_none_value_is_passed_through(self):
+        field = URLPathField(null=True)
+        field.set_attributes_from_name("path")
+
+        instance = types.SimpleNamespace(path=None)
+        assert field.pre_save(instance, True) is None
+
 
 class TestMultipleChoiceField:
     def test_defaults(self):
@@ -211,6 +241,19 @@ class TestMultipleChoiceField:
         field = MultipleChoiceField(options=[("a", "Alpha"), ("b", "Beta")])
         field.clean(["a", "b"], None)
 
+    def test_custom_validators_are_appended_to_the_options_validator(self):
+        def always_ok(value):
+            return None
+
+        field = MultipleChoiceField(options=[("a", "Alpha")], validators=[always_ok])
+
+        from blueprint.validators import ChoiceOptionsValidator
+
+        assert isinstance(field.validators[0], ChoiceOptionsValidator)
+        assert field.validators[1] is always_ok
+        with pytest.raises(ValidationError):
+            field.clean(["a", "b"], None)
+
 
 class TestTagField:
     def test_defaults_to_an_empty_list(self):
@@ -238,6 +281,11 @@ class TestTagField:
         tagged.refresh_from_db()
         assert tagged.tags == ["World"]
 
+    def test_non_list_values_are_passed_through(self):
+        tagged = Tagged.objects.create(tags={"a": 1})
+        tagged.refresh_from_db()
+        assert tagged.tags == {"a": 1}
+
 
 class TestHashTagField:
     def test_defaults_to_an_empty_list(self):
@@ -261,3 +309,8 @@ class TestHashTagField:
         tagged = HashTagged.objects.create(tags=["#", "   ", "#  #"])
         tagged.refresh_from_db()
         assert tagged.tags == []
+
+    def test_non_list_values_are_passed_through(self):
+        tagged = HashTagged.objects.create(tags="Not a list")
+        tagged.refresh_from_db()
+        assert tagged.tags == "Not a list"

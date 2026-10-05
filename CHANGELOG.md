@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+Release-candidate fixes found in the pre-1.0.0 review.
+
+- 👾 Packages now ship the compiled `nl` translation catalog: the `.mo` file was excluded from builds by a `.gitignore` rule and pip installs silently had no translations
+- 🎁 `FlexField` and `MultipleChoiceField` keep their built-in validation when caller-supplied `validators` are passed — custom validators are appended instead of silently replacing the schema/options validation
+- 👾 `URLPathField` no longer crashes on `None` values (with `null=True`) and keeps the root path `/` intact instead of turning it into an empty string
+- 👾 `Media.__str__` no longer crashes for instances without a file; it falls back to the name or primary key
+- 🧹 `TagField` and `HashTagField` pass non-list JSON values through unchanged instead of iterating them
+- 🧹 `HTMLField` only sanitizes string values
+
 ## v1.0.0-rc.1
 
 The stabilization and API refinement pass ahead of 1.0.0. Items marked ⚠️ are

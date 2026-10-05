@@ -9,6 +9,7 @@ default, capped at 200 characters, and normalizes values on save:
 
 - a missing leading slash is added: `docs/intro` becomes `/docs/intro`
 - a trailing slash is removed: `/docs/intro/` becomes `/docs/intro`
+- the root path `/` is kept as-is
 
 ```python
 from blueprint.fields import URLPathField

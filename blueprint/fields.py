@@ -1,7 +1,6 @@
 import jsonschema
 from django.core.validators import RegexValidator
 from django.db import models
-
 from django.utils.module_loading import import_string
 
 from .sanitizers import get_default_sanitizer
@@ -35,7 +34,7 @@ class HTMLField(models.TextField):
     def pre_save(self, model_instance, add):
         value = super().pre_save(model_instance, add)
 
-        if value:
+        if value and isinstance(value, str):
             value = self.get_sanitizer()(value)
 
             setattr(model_instance, self.attname, value)
@@ -67,7 +66,10 @@ class FlexField(models.JSONField):
 
         self.json_schema = schema
 
-        kwargs["validators"] = [JSONSchemaValidator(json_schema=self.json_schema)]
+        # The schema validator is a default: caller-supplied validators are
+        # appended to it instead of replacing it.
+        self.default_validators = [JSONSchemaValidator(json_schema=self.json_schema)]
+
         super().__init__(*args, **kwargs)
 
     def deconstruct(self):
@@ -100,13 +102,17 @@ class URLPathField(models.CharField):
     def pre_save(self, model_instance, add):
         """
         Make sure paths start with a slash and do not end with one.
+        The root path "/" is kept as-is.
         """
         value: str = getattr(model_instance, self.attname, "")
+
+        if value is None:
+            return value
 
         if not value.startswith("/"):
             value = f"/{value}"
 
-        if value.endswith("/"):
+        if value.endswith("/") and len(value) > 1:
             value = value[:-1]
 
         setattr(model_instance, self.attname, value)
@@ -128,7 +134,9 @@ class MultipleChoiceField(models.JSONField):
             list(options.items()) if isinstance(options, dict) else list(options)
         )
 
-        kwargs.setdefault("validators", [ChoiceOptionsValidator(options=self.options)])
+        # The options validator is a default: caller-supplied validators are
+        # appended to it instead of replacing it.
+        self.default_validators = [ChoiceOptionsValidator(options=self.options)]
 
         super().__init__(*args, **kwargs)
 
@@ -155,7 +163,7 @@ class TagField(models.JSONField):
         """
         value = super().pre_save(model_instance, add)
 
-        if value is None:
+        if value is None or not isinstance(value, list):
             return value
 
         trimmed = []
@@ -182,7 +190,7 @@ class HashTagField(TagField):
         """
         value = super().pre_save(model_instance, add)
 
-        if value is None:
+        if value is None or not isinstance(value, list):
             return value
 
         normalized = []

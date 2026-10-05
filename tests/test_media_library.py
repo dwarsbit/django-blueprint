@@ -88,6 +88,10 @@ class TestMedia:
         media.refresh_from_db()
         assert media.size is None
 
+    def test_str_without_file(self):
+        media = Media.objects.create(name="Lonely media")
+        assert str(media) == "Lonely media"
+
 
 class TestMediaFields:
     def test_media_field_defaults(self):

@@ -2,7 +2,6 @@ from typing import Literal
 
 from django.db import models
 
-
 type FileType = Literal["video", "image", "audio", "file"]
 
 

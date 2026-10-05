@@ -36,6 +36,7 @@ Managed with Poetry:
 
 ```bash
 poetry install                 # set up dev environment
+poetry run pytest              # run the test suite
 poetry run black .             # format (black, default settings — enforced)
 poetry run black --check .      # verify formatting
 ```
@@ -50,10 +51,16 @@ Never hand-edit existing migrations that have been released; add a new migration
 
 ### Testing
 
-There is no test suite yet. The plan is pytest with pytest-django (to be added). Until it exists:
+The suite uses pytest + pytest-django (configured in `pyproject.toml` under `[tool.pytest.ini_options]`):
 
-- Do not claim code is tested; verify changes by importing the package and checking model/field behavior in a scratch Django settings module.
-- When adding the test setup, use `pytest` + `pytest-django` with a minimal inline `DJANGO_SETTINGS_MODULE` (only `INSTALLED_APPS` with `django.contrib.contenttypes`, `django.contrib.auth`, `blueprint`, and an SQLite in-memory DB); add tests under `blueprint/<module>/tests/` and document the run command here.
+- `tests/settings.py` — minimal settings: in-memory SQLite, `contenttypes` + `auth` + the `blueprint` apps, throwaway `MEDIA_ROOT`.
+- `tests/models.py` — concrete models exercising the abstract bases, registered under the `blueprint` app label (the app has no migrations, so Django sync-creates their tables). `tests/conftest.py` imports this module so the models register before the test database is built.
+
+Conventions:
+
+- Every bug fix comes with a regression test.
+- Known-but-unfixed bugs are documented with `@pytest.mark.xfail` tests (each references its roadmap item in `ROADMAP.md`, kept local). When fixing one, flip the test to expect success.
+- Test models use explicit `db_table` values prefixed `test_` to avoid collisions.
 
 ## Code conventions
 

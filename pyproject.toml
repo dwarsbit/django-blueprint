@@ -18,6 +18,13 @@ packages = [{include = "blueprint"}]
 [tool.poetry.group.dev.dependencies]
 black = "^26.1.0"
 Django= "^6.0.2"
+pytest = "^8.4.0"
+pytest-django = "^4.11.0"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "tests.settings"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

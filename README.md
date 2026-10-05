@@ -100,7 +100,7 @@ poetry run pytest
 
 - 🐛 **Bug Reports**: [GitHub Issues](https://github.com/dwarsbit/django-blueprint/issues)
 - 💬 **Discussions**: [GitHub Discussions](https://github.com/dwarsbit/django-blueprint/discussions)
-- 📧 **Email**: leon@devtastic.io
+- 📧 **Email**: leon@dwarsbit.nl
 
 ## 📄 License
 

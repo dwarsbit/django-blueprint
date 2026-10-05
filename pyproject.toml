@@ -1,11 +1,12 @@
 [project]
 name = "django-blueprint"
-version = "1.0.0-beta.2"
+version = "1.0.0-rc.1"
 description = "Blueprint is a modular CMS for Django."
 authors = [
     {name = "Leon van der Grient",email = "leon@dwarsbit.nl"}
 ]
-license = {text = "MIT"}
+license = "MIT"
+license-files = ["LICENSE"]
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

@@ -1,9 +1,10 @@
 # Changelog
 
-## Unreleased
+## v1.0.0-rc.1
 
-The stabilization pass ahead of 1.0.0. Items marked ⚠️ are breaking for
-pre-1.0 users and may require running `makemigrations` in downstream projects.
+The stabilization and API refinement pass ahead of 1.0.0. Items marked ⚠️ are
+breaking for pre-1.0 users and may require running `makemigrations` in
+downstream projects.
 
 - 🧩 `SingletonModel` now enforces a single row at the database level via a unique `singleton` column — ⚠️ downstream projects must run `makemigrations`
 - 🧩 `QuerySet.delete()` on soft-deletable models now soft-deletes (stamps `removed_at`) instead of removing rows; note that cascade deletes driven by Django's collector still hard-delete

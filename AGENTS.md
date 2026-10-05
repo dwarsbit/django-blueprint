@@ -103,8 +103,9 @@ The version string exists in two places and must be kept in sync:
 
 Release flow:
 
-1. Update both version strings (beta/stable pre-releases use e.g. `1.0.0-beta.3`).
-2. Update `CHANGELOG.md`.
-3. Commit with a `chore:`/`fix:` conventional message.
-4. Tag as `v<version>` (e.g. `v1.0.0-beta.3`).
-5. Build with `poetry build`; artifacts land in `dist/` (committed in this repo).
+1. Update both version strings (pre-releases use e.g. `1.0.0-rc.1`).
+2. Update `CHANGELOG.md` (re-cut `Unreleased` into the version section).
+3. Commit with a `chore:` conventional message.
+4. Tag as `v<version>` (e.g. `v1.0.0-rc.1`) and push `main` with the tag.
+5. Build with `poetry build`; artifacts land in `dist/` (git-ignored).
+6. Publish to PyPI with `poetry publish`.
